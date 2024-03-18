@@ -6,6 +6,7 @@
 
 ## Description
 
+```text
 A simple implementation of the `wc` (word count) utility
 
 Usage: ccwc [OPTIONS] [FILE]
@@ -20,6 +21,7 @@ Options:
   -m             Number of characters in file, supporting multibyte characters
   -h, --help     Print help
   -V, --version  Print version
+```
 
 ## Installation and Usage
 
