@@ -1,5 +1,6 @@
 use std::{fs, io::Read};
 
+use anyhow::Context;
 use clap::Parser;
 
 /// A simple implementation of the `wc` (word count) utility.
@@ -26,18 +27,20 @@ struct Args {
     file: Option<String>,
 }
 
-fn main() {
+fn main() -> anyhow::Result<()> {
     let args = Args::parse();
 
     let mut contents = String::new();
 
     if let Some(filename) = &args.file {
         fs::File::open(filename)
-            .unwrap()
+            .context(format!("failed to open file `{}`", filename))?
             .read_to_string(&mut contents)
-            .unwrap();
+            .context(format!("failed to read file `{}`", filename))?;
     } else {
-        std::io::stdin().read_to_string(&mut contents).unwrap();
+        std::io::stdin()
+            .read_to_string(&mut contents)
+            .context("failed to read from stdin")?;
     }
 
     let mut output = String::new();
@@ -64,4 +67,6 @@ fn main() {
     }
 
     println!("{}", output);
+
+    Ok(())
 }
