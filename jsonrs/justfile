@@ -1,0 +1,2 @@
+lexer:
+  cargo t --test lexer -- --nocapture

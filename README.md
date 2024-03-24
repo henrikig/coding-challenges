@@ -6,3 +6,4 @@ This repository contains solutions to (some) of the code challenges from
 ## Challenges
 
 - [x] [Build Your own wc Tool](./ccwc)
+- [ ] [Build Your Own JSON Parser](./jsonrs) :construction_worker:
