@@ -3,15 +3,15 @@ pub enum TokenType {
     LBRACE,
     RBRACE,
 
-    QUOTE,
     COLON,
     COMMA,
 
-    IDENT,
+    STRING,
     INT,
 
     TRUE,
     FALSE,
+    NULL,
 
     ILLEGAL,
 
@@ -20,14 +20,17 @@ pub enum TokenType {
 
 #[derive(Debug)]
 pub struct Token {
-    r#type: TokenType,
+    pub token_type: TokenType,
     // TODO: operate on slices
-    literal: String,
+    pub literal: String,
 }
 
 impl Token {
     pub fn new(r#type: TokenType, literal: String) -> Self {
-        Token { r#type, literal }
+        Token {
+            token_type: r#type,
+            literal,
+        }
     }
 }
 
@@ -36,13 +39,14 @@ impl From<&str> for Token {
         match value {
             "true" => Token::new(TokenType::TRUE, String::from("true")),
             "false" => Token::new(TokenType::FALSE, String::from("false")),
-            _ => todo!(),
+            "null" => Token::new(TokenType::NULL, String::from("null")),
+            _ => Token::new(TokenType::ILLEGAL, String::from(value)),
         }
     }
 }
 
 impl PartialEq for Token {
     fn eq(&self, other: &Self) -> bool {
-        self.r#type == other.r#type && self.literal == other.literal
+        self.token_type == other.token_type && self.literal == other.literal
     }
 }

@@ -28,11 +28,14 @@ impl Lexer {
             ':' => Token::new(TokenType::COLON, String::from(self.ch)),
             ',' => Token::new(TokenType::COMMA, String::from(self.ch)),
             '\0' => Token::new(TokenType::EOF, String::from("\0")),
-            '"' => Token::new(TokenType::QUOTE, String::from(self.ch)),
+            '"' => {
+                let string = self.read_string();
+                return Token::new(TokenType::STRING, string);
+            }
             _ => {
                 if is_letter(self.ch) {
-                    let literal = self.read_identifier();
-                    return Token::new(TokenType::IDENT, literal);
+                    let literal = self.read_literal();
+                    return Token::from(literal.as_ref());
                 }
                 if is_digit(self.ch) {
                     let literal = self.read_digit();
@@ -61,9 +64,20 @@ impl Lexer {
         self.read_position += 1;
     }
 
-    fn read_identifier(&mut self) -> String {
-        let position = self.position;
+    fn read_string(&mut self) -> String {
+        let position = self.position + 1;
+        self.read_char();
         while self.ch != '"' {
+            self.read_char()
+        }
+        let res = String::from(&self.input[position..self.position]);
+        self.read_char();
+        res
+    }
+
+    fn read_digit(&mut self) -> String {
+        let position = self.position;
+        while is_digit(self.ch) {
             self.read_char()
         }
 
@@ -71,9 +85,9 @@ impl Lexer {
         res
     }
 
-    fn read_digit(&mut self) -> String {
+    fn read_literal(&mut self) -> String {
         let position = self.position;
-        while is_digit(self.ch) {
+        while is_letter(self.ch) || is_digit(self.ch) {
             self.read_char()
         }
 
@@ -93,7 +107,7 @@ fn is_letter(input: char) -> bool {
 }
 
 fn is_digit(input: char) -> bool {
-    matches!(input, '0'..='9')
+    matches!(input, '0'..='9' | '.')
 }
 
 #[cfg(test)]
