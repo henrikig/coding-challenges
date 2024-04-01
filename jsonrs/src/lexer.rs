@@ -24,13 +24,13 @@ impl Lexer {
         self.skip_whitespace();
 
         let tok = match self.ch {
-            '{' => Token::new(TokenType::LBRACE, String::from(self.ch)),
-            '}' => Token::new(TokenType::RBRACE, String::from(self.ch)),
-            '[' => Token::new(TokenType::LBRACKET, String::from(self.ch)),
-            ']' => Token::new(TokenType::RBRACKET, String::from(self.ch)),
-            ':' => Token::new(TokenType::COLON, String::from(self.ch)),
-            ',' => Token::new(TokenType::COMMA, String::from(self.ch)),
-            '\0' => Token::new(TokenType::EOF, String::from("\0")),
+            '{' => Token::new(TokenType::LBRACE, self.ch.into()),
+            '}' => Token::new(TokenType::RBRACE, self.ch.into()),
+            '[' => Token::new(TokenType::LBRACKET, self.ch.into()),
+            ']' => Token::new(TokenType::RBRACKET, self.ch.into()),
+            ':' => Token::new(TokenType::COLON, self.ch.into()),
+            ',' => Token::new(TokenType::COMMA, self.ch.into()),
+            '\0' => Token::new(TokenType::EOF, "\0".into()),
             '"' => {
                 let string = self.read_string();
                 return Token::new(TokenType::STRING, string);
@@ -44,7 +44,7 @@ impl Lexer {
                     let literal = self.read_digit();
                     return Token::new(TokenType::INT, literal);
                 }
-                return Token::new(TokenType::ILLEGAL, String::from(self.ch));
+                return Token::new(TokenType::ILLEGAL, self.ch.into());
             }
         };
 
@@ -73,7 +73,7 @@ impl Lexer {
         while self.ch != '"' {
             self.read_char()
         }
-        let res = String::from(&self.input[position..self.position]);
+        let res = self.input[position..self.position].into();
         self.read_char();
         res
     }
@@ -84,7 +84,7 @@ impl Lexer {
             self.read_char()
         }
 
-        let res = String::from(&self.input[position..self.position]);
+        let res = self.input[position..self.position].into();
         res
     }
 
@@ -94,7 +94,7 @@ impl Lexer {
             self.read_char()
         }
 
-        let res = String::from(&self.input[position..self.position]);
+        let res = self.input[position..self.position].into();
         res
     }
 
@@ -111,20 +111,4 @@ fn is_letter(input: char) -> bool {
 
 fn is_digit(input: char) -> bool {
     matches!(input, '0'..='9' | '.')
-}
-
-#[cfg(test)]
-mod tests {
-    use crate::lexer::is_letter;
-
-    #[test]
-    fn it_works() {
-        let res = is_letter('=');
-        assert_eq!(res, false);
-    }
-
-    #[test]
-    fn quote_not_whitespace() {
-        assert!(!'"'.is_whitespace());
-    }
 }

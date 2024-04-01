@@ -39,10 +39,10 @@ impl Token {
 impl From<&str> for Token {
     fn from(value: &str) -> Self {
         match value {
-            "true" => Token::new(TokenType::TRUE, String::from("true")),
-            "false" => Token::new(TokenType::FALSE, String::from("false")),
-            "null" => Token::new(TokenType::NULL, String::from("null")),
-            _ => Token::new(TokenType::ILLEGAL, String::from(value)),
+            "true" => Token::new(TokenType::TRUE, value.into()),
+            "false" => Token::new(TokenType::FALSE, value.into()),
+            "null" => Token::new(TokenType::NULL, value.into()),
+            _ => Token::new(TokenType::ILLEGAL, value.into()),
         }
     }
 }

@@ -16,8 +16,8 @@ impl<'a> Parser<'a> {
     pub fn new(l: &'a mut Lexer) -> Parser<'a> {
         let mut p = Parser {
             l,
-            cur_token: Token::new(TokenType::EOF, String::from("\0")),
-            peek_token: Token::new(TokenType::EOF, String::from("\0")),
+            cur_token: Token::new(TokenType::EOF, "\0".into()),
+            peek_token: Token::new(TokenType::EOF, "\0".into()),
         };
         p.next_token();
         p.next_token();
