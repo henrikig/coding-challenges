@@ -1,28 +1,25 @@
 use std::path::PathBuf;
 
-use clap::Parser;
-use jsonrs::{lexer::Lexer, token::TokenType};
+use anyhow::{Context, Result};
+use jsonrs::{lexer::Lexer, parser::Parser};
 
-#[derive(Parser)]
+#[derive(clap::Parser)]
 #[command(version, about, long_about = None)]
 struct Cli {
     /// Path to JSON file
-    name: Option<PathBuf>,
+    name: PathBuf,
 }
 
-fn main() {
-    let cli = Cli::parse();
+fn main() -> Result<()> {
+    let cli = <Cli as clap::Parser>::parse();
 
-    if let Some(config_path) = cli.name {
-        let contents = std::fs::read_to_string(config_path).unwrap();
-        let mut lexer = Lexer::new(contents);
+    let contents = std::fs::read_to_string(&cli.name)
+            .context(format!("failed to open file `{:?}`", &cli.name))?;
 
-        let mut token = lexer.next_token();
-        println!("{:?}", token);
+    let mut lexer = Lexer::new(contents);
+    let mut parser = Parser::new(&mut lexer);
 
-        while token.token_type != TokenType::EOF {
-            token = lexer.next_token();
-            println!("{:?}", token);
-        }
-    }
+    parser.parse()?;
+    println!("Successfully parsed JSON.");
+    Ok(())
 }

@@ -1,5 +1,6 @@
 use crate::token::{Token, TokenType};
 
+#[derive(Debug)]
 pub struct Lexer {
     input: String,
     position: usize,
@@ -25,6 +26,8 @@ impl Lexer {
         let tok = match self.ch {
             '{' => Token::new(TokenType::LBRACE, String::from(self.ch)),
             '}' => Token::new(TokenType::RBRACE, String::from(self.ch)),
+            '[' => Token::new(TokenType::LBRACKET, String::from(self.ch)),
+            ']' => Token::new(TokenType::RBRACKET, String::from(self.ch)),
             ':' => Token::new(TokenType::COLON, String::from(self.ch)),
             ',' => Token::new(TokenType::COMMA, String::from(self.ch)),
             '\0' => Token::new(TokenType::EOF, String::from("\0")),

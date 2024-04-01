@@ -1,7 +1,9 @@
-#[derive(PartialEq, Debug)]
+#[derive(PartialEq, Debug, Clone)]
 pub enum TokenType {
     LBRACE,
     RBRACE,
+    LBRACKET,
+    RBRACKET,
 
     COLON,
     COMMA,
@@ -18,7 +20,7 @@ pub enum TokenType {
     EOF,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Token {
     pub token_type: TokenType,
     // TODO: operate on slices
